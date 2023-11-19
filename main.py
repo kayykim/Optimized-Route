@@ -1,80 +1,50 @@
-import requests
-import geopy
-import folium
-from pprint import pprint
+# Goal of code: 
+# 1. Import Excel Spreadsheet
+# 2. Convert postal code into latitude and longitude
+# 3. Make them available in global variables
 
-#have user input as many stops
-num_locations = int(input("Enter number of locations: "))
+import pandas as pd # for working with data sets
+import openpyxl # for getting info from excel
+import folium # for visualizing data
+import geopy # for locating coods from addresses
 
-#make a list to put all the location postal addresses
-addresses = []
-#list to store lat and long coordinates
-latitude = []
-longitude = []
+# Libraries we might not need if we use google API
+import requests # for making HTTP requests
+#line 35 -- using open street map (could use google maps?)
 
-#have user enter in the postal code of locations
-for x in range (num_locations):
-    #have user enter location address
-    new_location = input("Enter postal code: ")
-    addresses.append(new_location)
 
-#using the list, find the latitude and long of each
-print ("Your entered addresses: ", addresses)
 
-#counter variable
-c = 0
+# 1. Import spreadsheet
+sheet_id = '1TepU9j_QfklHsPXu9GdFnl-jkdv4_syZkE2ArU_u3Xs' # Must be changed with specific execl address
+data = pd.read_excel('address_list.xlsx') # data is the variable that stores the excel file
 
-while c < num_locations:
-    #find post code from addresses array
-    postcode = addresses[c]
+    # Variable postalCode contains all the lists of postal codes
+postalCode = data['Postal Code'].tolist()
 
-    # find lat and long from postcode
-    response = requests.get(f"https://nominatim.openstreetmap.org/search?format=json&postalcode={postcode}")
-    data = response.json()
 
-    # add lat coordinates to array latitude
-    latitude.append(data[0].get('lat'))
+# 2. Convert Postal Codes into lat and long
 
-    # add long coordinates to array longitude
-    longitude.append(data[0].get('lon'))
+    # initalize list 
+lat = []
+long = []
 
-    print (latitude[c])
-    print (longitude[c])
+    # convert all elements in list using for loops
+for x in range (len(postalCode)):
+    onePostalCode = postalCode[x]
+    #find lat and long using open street map
+    response = requests.get(f"https://nominatim.openstreetmap.org/search?format=json&postalcode={onePostalCode}")
+    info = response.json()
+    print (info)
 
+    lat.append(info[0].get('lat'))
+    long.append(info[0].get('long'))
+
+    print (lat[x])
+    print (long[x])
     print ('\n')
-    print (latitude[c], longitude[c])
-    print (c)
-    print ('\n')
+    
 
-    #increment counter (c) to print out next coord variables
-    c += 1
 
-#store location
-location1 = (latitude[0], longitude[0])
-print (location1)
 
-location2 = (latitude[1], longitude[1])
-print (location2)
 
-'''
 
-#mark the locations on map
-
-location1 = float(latitude1), float(longitude1)
-location2 = float(latitude2), float(longitude2)
-
-m = folium.Map(location=location1, width= 800, height= 400)
-
-folium.Marker(location1, popup="REV").add_to(m)
-folium.Marker(location2, popup="CMH").add_to(m)
-
-m.save("map.html")
-
-#find the distance between two points
-from geopy.distance import distance
-
-km = distance (location1, location2)
-
-#print text of m
-print (m)
-'''
