@@ -27,6 +27,7 @@ postalCode = data['Postal Code'].tolist()
     # initalize list 
 lat = []
 long = []
+coords = []
 
     # convert all elements in list using for loops
 for x in range (len(postalCode)):
@@ -34,7 +35,6 @@ for x in range (len(postalCode)):
     #find lat and long using open street map
     response = requests.get(f"https://nominatim.openstreetmap.org/search?format=json&postalcode={onePostalCode}")
     info = response.json()
-    print (info)
 
     lat.append(info[0].get('lat'))
     long.append(info[0].get('long'))
