@@ -39,8 +39,22 @@ for x in range (len(postalCode)):
     lat.append(info[0].get('lat'))
     long.append(info[0].get('long'))
 
-    print (lat[x])
-    print (long[x])
+    # put these into coordinates 
+    # represented as (long, lat, long, lat)
+counter = 0 # make sure the correct 
+alt_counter = 0 # alternates betwee long and lat
+
+while counter < len(lat):
+    if alt_counter == 0:
+        coords.append(long[counter])
+        alt_counter = 1
+
+    else:
+        coords.append(lat[counter])
+        alt_counter = 0
+        counter += 1
+
+    print (coords)
     print ('\n')
     
 
