@@ -23,6 +23,7 @@ def main():
     sheet_id = '1TepU9j_QfklHsPXu9GdFnl-jkdv4_syZkE2ArU_u3Xs' # Must be changed with specific execl address
     postalCode, index = get_postalCodes() # get a list of postal codes
     lat_coords, long_coords, distance_list = get_coords(postalCode)
+    distance_list = get_distance(distance_list)
     
 def get_postalCodes():
     id = []
@@ -56,5 +57,14 @@ def get_coords(pc):
 
     return lat, long, d_array
 
+def get_distance(d_array):
+    # Perform bubble sort to orginize the list from longest -> shortest distance
+    for i in range (len(d_array) - 2):
+        for j in range (len(d_array) - i - 2):
+            if d_array[j+1] < d_array[j+2]:
+                d_array[j+1], d_array[j+2] = d_array[j+2], d_array[j+1]
+            i += 1
+            j += 1
 
+    return d_array
 
