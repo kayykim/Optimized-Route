@@ -22,6 +22,7 @@ path = []
 def main():
     sheet_id = '1TepU9j_QfklHsPXu9GdFnl-jkdv4_syZkE2ArU_u3Xs' # Must be changed with specific execl address
     postalCode, index = get_postalCodes() # get a list of postal codes
+    lat_coords, long_coords, distance_list = get_coords(postalCode)
     
 def get_postalCodes():
     id = []
@@ -35,6 +36,25 @@ def get_postalCodes():
         id.append(i)
     return pc, id
 
+def get_coords(pc):
+    lat = []
+    long = []
+    d_array = []
+
+    # 2. Convert Postal Codes into lat and long
+
+    # convert all elements in list using for loops
+    for x in range (len(pc)):
+        onePostalCode = pc[x]
+        #find lat and long using open street map
+        response = requests.get(f"https://nominatim.openstreetmap.org/search?format=json&postalcode={onePostalCode}")
+        info = response.json()
+        lat.append(float (info[0].get('lat')))
+        long.append(float (info[0].get('lon')))
+        distance = math.sqrt(lat[x]**2 + long[x]**2)
+        d_array.append(distance)
+
+    return lat, long, d_array
 
 
 
